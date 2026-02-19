@@ -10,26 +10,66 @@
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
+            background: #f4f6f9;
         }
-
         input,
         textarea {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             box-sizing: border-box;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
         }
-
         button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 6px;
+            font-size: 16px;
         }
-
         button:hover {
             background-color: #45a049;
+        }
+        @media (max-width: 700px) {
+            body {
+                max-width: 98vw;
+                margin: 0;
+                padding: 10px 2vw;
+            }
+            .note-container, form {
+                padding: 10px 2vw;
+            }
+            input, textarea {
+                font-size: 14px;
+                padding: 8px;
+            }
+            button {
+                font-size: 15px;
+                padding: 8px 12px;
+            }
+            img[alt="LPU Logo"] {
+                height: 36px !important;
+            }
+            h2 {
+                font-size: 20px !important;
+            }
+        }
+        @media (max-width: 400px) {
+            body {
+                padding: 2px 1vw;
+            }
+            input, textarea {
+                font-size: 12px;
+                padding: 6px;
+            }
+            button {
+                font-size: 13px;
+                padding: 6px 8px;
+            }
         }
     </style>
 </head>
