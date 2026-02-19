@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="icon" type="image/x-icon" href="/logo.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <img src="/logo.png" alt="LPU Logo" style="height: 60px; margin-bottom: 20px;">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <% if (locals.error) { %>
+            <p style="color: red; font-size: 13px; margin-top: 10px;">❌ Invalid email or password!</p>
+            <% } %>
+                <p>Don't have an account? <a href="/register">Register</a></p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <a href="/"
+                    style="display: inline-block; padding: 8px 15px; background: #eee; color: #333; border-radius: 5px; font-size: 14px; text-decoration: none;">←
+                    Back to Home</a>
+    </div>
+
+
+</body>
+
+</html>
