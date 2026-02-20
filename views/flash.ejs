@@ -1,0 +1,20 @@
+<% if (messages && messages.length> 0) { %>
+  <div id="flash-container"
+    style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 400px; transition: opacity 0.5s;">
+    <% messages.forEach(function(msg) { %>
+      <div class="flash-message"
+        style="padding: 16px 20px; border-radius: 12px; margin-bottom: 10px; background: #111; color: #fff; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;">
+        <%= msg %>
+      </div>
+      <% }); %>
+  </div>
+  <script>
+    setTimeout(function () {
+      var flash = document.getElementById('flash-container');
+      if (flash) {
+        flash.style.opacity = '0';
+        setTimeout(() => { flash.remove(); }, 500);
+      }
+    }, 4000);
+  </script>
+  <% } %>

@@ -2,96 +2,164 @@
 <html>
 
 <head>
-    <title>View Note</title>
+    <title>
+        <%= note.title %> - LPU Notes
+    </title>
     <link rel="icon" type="image/x-icon" href="/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            --bg: #f4f6f9;
+            --text: #1a1a1a;
+            --text-muted: #666;
+            --card-bg: #ffffff;
+            --border: #eeeeee;
+            --primary: #111111;
+            --primary-invert: #ffffff;
+        }
+
+        body[data-theme='dark'] {
+            --bg: #121212;
+            --text: #f4f6f9;
+            --text-muted: #a0a0a0;
+            --card-bg: #1e1e1e;
+            --border: #333333;
+            --primary: #ffffff;
+            --primary-invert: #111111;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #f4f6f9;
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 40px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            transition: background 0.3s;
         }
-        .note-container {
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
         }
-        h2 {
-            margin-top: 0;
+
+        .logo {
+            height: 50px;
         }
-        .content {
+
+        .view-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .note-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .note-content {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--text);
             white-space: pre-wrap;
+            margin-bottom: 30px;
         }
-        a {
+
+        .note-media {
+            width: 100%;
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            display: block;
+        }
+
+        .meta {
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-back {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 30px;
+            color: var(--text-muted);
             text-decoration: none;
-            color: #000000;
+            font-weight: 600;
+            font-size: 15px;
         }
-        a:hover {
-            text-decoration: underline;
+
+        .btn-edit {
+            background: var(--primary);
+            color: var(--primary-invert);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
         }
-        @media (max-width: 700px) {
+
+        @media (max-width: 480px) {
             body {
-                max-width: 98vw;
-                margin: 0;
-                padding: 10px 2vw;
+                padding: 20px 15px;
             }
-            .note-container {
-                padding: 10px 2vw;
+
+            .view-container {
+                padding: 25px 20px;
             }
-            h2 {
-                font-size: 20px !important;
+
+            .note-title {
+                font-size: 26px;
             }
-            img[alt="LPU Logo"] {
-                height: 36px !important;
-            }
-        }
-        @media (max-width: 400px) {
-            body {
-                padding: 2px 1vw;
-            }
-            .note-container {
-                padding: 6px 1vw;
-            }
-            h2 {
-                font-size: 16px !important;
+
+            .note-content {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 
 <body>
-
-    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-        <img src="/logo.png" alt="LPU Logo" style="height: 50px;">
-        <h2 style="margin: 0;">View Note</h2>
+    <div class="header">
+        <a href="/"><img src="/logo.png" alt="LPU Logo" class="logo"></a>
+        <h2 style="margin: 0; font-size: 24px; font-weight: 800;">View Note</h2>
     </div>
-    <div class="note-container">
-        <h2>
+
+    <div class="view-container">
+        <h1 class="note-title">
             <%= note.title %>
-        </h2>
-        <p class="content">
+        </h1>
+        <div class="note-content">
             <%= note.content %>
-        </p>
+        </div>
 
         <% if (note.image) { %>
-            <% if (note.image.match(/\.(jpg|jpeg|png)$/i)) { %>
-                <img src="/uploads/<%= note.image %>" alt="Note Media" style="max-width:100%;margin-top:15px;" />
-                <% } else { %>
-                    <a href="/uploads/<%= note.image %>" target="_blank">Download attached file</a>
-                    <% } %>
-                        <% } %>
+            <img src="<%= note.image %>" alt="Note Attachment" class="note-media">
+            <% } %>
 
-
-                            <hr>
-                            <p><small>ID: <%= note.id %></small></p>
+                <div class="meta">
+                    <span style="font-size: 12px; color: var(--text-muted);">Note ID: <%= note.id %></span>
+                    <a href="/edit-note/<%= note.id %>" class="btn-edit">Edit Note</a>
+                </div>
     </div>
 
-    <a href="/">Back to Home</a>
+    <a href="/" class="btn-back">← Back to Dashboard</a>
 
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+        }
+    </script>
 </body>
 
 </html>

@@ -2,313 +2,642 @@
 <html>
 
 <head>
-    <title>Notes App</title>
+    <title>LPU Notes</title>
     <link rel="icon" type="image/x-icon" href="/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --bg-light: #f4f6f9;
-            --bg-dark: #181a1b;
-            --text-light: #333;
-            --text-dark: #f4f6f9;
-            --header-light: #fff;
-            --header-dark: #23272a;
-            --card-light: #fff;
-            --card-dark: #23272a;
-        }
-        body[data-theme='dark'] {
-            background: var(--bg-dark);
-            color: var(--text-dark);
-        }
-        body[data-theme='dark'] .header {
-            background: var(--header-dark);
-            color: var(--text-dark);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-        }
-        body[data-theme='dark'] .form-section,
-        body[data-theme='dark'] .note-card {
-            background: var(--card-dark);
-            color: var(--text-dark);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        body[data-theme='dark'] .btn,
-        body[data-theme='dark'] .btn-login,
-        body[data-theme='dark'] .btn-register,
-        body[data-theme='dark'] .btn-logout {
-            background: #444 !important;
-            color: #fff !important;
-        }
-        body[data-theme='dark'] input,
-        body[data-theme='dark'] textarea {
-            background: #23272a;
-            color: #f4f6f9;
-            border: 1px solid #444;
-        }
-        body[data-theme='dark'] a {
-            color: #4da3ff;
-        }
-        body[data-theme='dark'] .save-btn {
-            background: #357a38;
-        }
-        body[data-theme='dark'] .save-btn:hover {
-            background: #285c2c;
-        }
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f6f9;
+            --bg: #f4f6f9;
+            --text: #1a1a1a;
+            --text-muted: #666;
+            --header-bg: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.743);
+            --border: #eeeeee;
+            --primary: #111111;
+            --primary-invert: #ffffff;
+            --input-bg: #ffffff;
+            --sidebar-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.05);
+            --accent: #0f9b24;
+            --btn-bg: #111111;
+            --btn-text: #ffffff;
         }
 
-        .container {
-            display: flex;
-            height: calc(100vh - 60px);
-            /* Adjust for header */
+        body[data-theme='dark'] {
+            --bg: #121212;
+            --text: #f4f6f9;
+            --text-muted: #a0a0a0;
+            --header-bg: #1e1e1e;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --border: #333333;
+            --primary: #ffffff;
+            --primary-invert: #111111;
+            --input-bg: #2d2d2d;
+            --sidebar-bg: #1e1e1e;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --accent: #28a745;
+            --btn-bg: #ffffff;
+            --btn-text: #111111;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
         .header {
-            background: #fff;
+            background: var(--header-bg);
             padding: 10px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px var(--shadow);
             height: 70px;
             box-sizing: border-box;
             position: sticky;
             top: 0;
-            z-index: 1000;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            z-index: 2000;
+            border-bottom: 1px solid var(--border);
         }
 
         .header-logo {
-            height: 50px;
+            height: 45px;
             width: auto;
         }
 
-        .header h1 {
+        .navbar-title {
             margin: 0;
-            font-size: 26px;
-            color: #333;
+            font-size: 24px;
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 70px);
+            position: relative;
+        }
+
+        .sidebar {
+            width: 70px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            gap: 20px;
+            z-index: 1001;
+        }
+
+        .nav-item {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg);
+            color: var(--text-muted);
+            text-decoration: none;
+            border: none;
+        }
+
+        .nav-item:hover {
+            background: var(--primary);
+            color: var(--primary-invert);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: var(--primary-invert);
+        }
+
+        .form-section {
+            position: fixed;
+            top: 70px;
+            left: 70px;
+            width: 380px;
+            height: calc(100vh - 70px);
+            background: var(--header-bg);
+            padding: 30px;
+            box-shadow: 5px 0 15px var(--shadow);
+            box-sizing: border-box;
+            z-index: 1000;
+            transform: translateX(-105%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        .form-section.open {
+            transform: translateX(0);
+        }
+
+        .notes-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        .note-card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+            backdrop-filter: blur(5px);
+
+        }
+
+        .note-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .note-title {
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .note-content {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .save-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: var(--accent);
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
             font-weight: 700;
         }
 
-        .auth-buttons a {
+        .btn-action {
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            border: none;
+            font-weight: 700;
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            transition: all 0.2s;
+            text-align: center;
             text-decoration: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            margin-left: 10px;
-            font-size: 14px;
         }
 
-        .btn-login {
-            background: #007BFF;
+        .btn-action:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
         .btn-register {
-            background: #28a745;
+            background: var(--btn-bg);
+            color: var(--btn-text);
         }
 
-        .btn-logout {
-            background: #dc3545;
+        body[data-theme='dark'] .btn-register {
+            background: #8b5cf6;
+            /* premium purple */
+            color: #ffffff;
         }
 
-        /* LEFT SIDE FORM */
-        .form-section {
-            width: 35%;
-            padding: 30px;
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        .btn-register:hover {
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
 
-        h2 {
-            margin-top: 0;
+        .theme-toggle {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--header-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sort-pill {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            background: var(--border);
+            color: var(--text-muted);
+        }
+
+        .sort-pill.active {
+            background: var(--primary);
+            color: var(--primary-invert);
         }
 
         input,
         textarea {
             width: 100%;
             padding: 12px;
-            margin-top: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 14px;
+            margin-top: 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            outline: none;
+            box-sizing: border-box;
         }
 
-        textarea {
-            height: 120px;
-            resize: none;
+        input:focus,
+        textarea:focus {
+            border-color: var(--accent);
         }
 
-        .save-btn {
-            margin-top: 15px;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: #4CAF50;
-            color: white;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .save-btn:hover {
-            background: #45a049;
-        }
-
-        /* RIGHT SIDE NOTES */
-        .notes-section {
-            width: 65%;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .note-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .note-title {
-            margin: 0;
-        }
-
-        .note-actions {
-            margin-top: 15px;
-        }
-
-
-        .btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-right: 8px;
+        label {
             font-size: 13px;
-            background: #111;
-            color: #fff;
+            font-weight: 700;
+            color: var(--text-muted);
         }
 
-        .delete,
-        .edit,
-        .view {
-            background: #111 !important;
-            color: #fff !important;
-        }
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 20px;
+            }
 
-        .btn:hover {
-            opacity: 0.85;
+            .form-section {
+                width: 100%;
+                left: 0;
+                top: 70px;
+                transform: translateY(-100%);
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .form-section.open {
+                transform: translateY(0);
+            }
+
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 70px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0;
+                border-top: 1px solid var(--border);
+                border-right: none;
+                background: var(--header-bg);
+            }
+
+            .notes-section {
+                padding: 20px;
+                padding-bottom: 90px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <%- include('flash') %>
 
-
-    <div class="header">
-        <div class="header-left">
-            <img src="/logo.png" alt="LPU Logo" class="header-logo">
-            <h1>LPU Notes</h1>
-        </div>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <button id="theme-toggle" style="padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; background: #eee; color: #333; font-size: 15px;">🌙 Dark</button>
-            <div class="auth-buttons">
-                <% if (locals.user) { %>
-                    <span>Welcome, <%= user.username %>!</span>
-                    <a href="/logout" class="btn-logout">Logout</a>
-                <% } else { %>
-                    <a href="/login" class="btn-login">Login</a>
-                    <a href="/register" class="btn-register">Register</a>
-                <% } %>
+        <div class="header">
+            <div class="flex items-center gap-4">
+                <img src="/logo.png" alt="LPU Logo" class="header-logo">
+                <h1 class="navbar-title">LPU Notes</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-3">
+                    <% if (locals.user) { %>
+                        <span style="font-size: 14px; font-weight: 600; color: var(--text-muted);">Hi, <%= user.username
+                                %>!</span>
+                        <a href="/logout" class="btn-action" style="background: #dc3545;">Logout</a>
+                        <% } else { %>
+                            <a href="/login" class="btn-action">Login</a>
+                            <a href="/register" class="btn-action btn-register">Register</a>
+                            <% } %>
+                </div>
+                <button id="theme-toggle" class="theme-toggle">🌙 Dark</button>
             </div>
         </div>
-        </div>
-    </div>
 
-    <div class="container">
-        <!-- LEFT SIDE ADD NOTE -->
-        <div class="form-section">
-            <h2>Add Note</h2>
+        <div class="container">
+            <div class="sidebar">
+                <a href="/" class="nav-item active">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </a>
+                <% if (locals.user) { %>
+                    <button id="toggle-form-btn" class="nav-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                    <% } %>
+            </div>
 
-            <form action="/add-note" method="POST" enctype="multipart/form-data">
-                <input type="text" name="title" placeholder="Title" required>
-                <textarea name="content" placeholder="Content" required></textarea>
-                <input type="file" name="media" accept="image/*,video/*,audio/*" style="margin-top:10px;">
-                <button class="save-btn" type="submit">Save Note</button>
-            </form>
-        </div>
+            <div class="form-section" id="add-note-form">
 
-        <!-- RIGHT SIDE NOTES -->
-        <div class="notes-section">
-            <% if (locals.user) { %>
-                <h2>Saved Notes</h2>
-                <% if (notes.length> 0) { %>
-                    <% notes.forEach(note=> { %>
-                        <div class="note-card">
-                            <h3 class="note-title">
-                                <%= note.title %>
-                            </h3>
-                            <p>
-                                <%= note.content %>
-                            </p>
-                            <div class="note-actions">
-                                <form action="/delete-note/<%= note.id %>" method="POST" style="display:inline;">
-                                    <button class="btn delete" type="submit"
-                                        onclick="return confirm('Are you sure you want to delete this note?');">Delete</button>
-                                </form>
-                                <button class="btn edit"
-                                    onclick="window.location.href='/edit-note/<%= note.id %>'">Edit</button>
-                                <button class="btn view"
-                                    onclick="window.location.href='/view-note/<%= note.id %>'">View</button>
-                            </div>
-                            <% if (note.image) { %>
-                                <% if (note.image.match(/\.(jpg|jpeg|png)$/i)) { %>
-                                    <img src="/uploads/<%= note.image %>" alt="Note Media"
-                                        style="max-width:50%;max-height:200px;margin-top:15px;" />
-                                    <% } else { %>
-                                        <a href="/uploads/<%= note.image %>" target="_blank">Download attached file</a>
-                                        <% } %>
-                                            <% } %>
+                <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 25px;">New Note</h2>
+                <form action="/add-note" method="POST" enctype="multipart/form-data">
+                    <div style="margin-bottom: 20px;">
+                        <label>Title</label>
+                        <input type="text" name="title" placeholder="Note Title" required>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label>Content</label>
+                        <textarea name="content" placeholder="Content" required style="height: 180px;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        <label>Attachment</label>
+                        <div class="relative mt-2">
+                            <input type="file" name="media" id="media-input" accept="image/*,video/*,audio/*"
+                                class="hidden">
+                            <label for="media-input"
+                                class="flex items-center justify-between w-full p-3 border-2 border-dashed border-[var(--border)] rounded-xl cursor-pointer hover:border-[var(--accent)] transition-all bg-[var(--input-bg)]">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-[var(--bg)] rounded-lg text-[var(--accent)]">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                    </div>
+                                    <span id="file-name" class="text-sm font-semibold text-[var(--text-muted)]">Upload
+                                        Image/Media</span>
+                                </div>
+                                <span
+                                    class="text-xs font-bold px-3 py-1 bg-[var(--accent)] text-white rounded-full">Browse</span>
+                            </label>
                         </div>
-                        <% }) %>
-                            <% } else { %>
-                                <p>No notes found. Start by adding one!</p>
-                                <% } %>
-                                    <% } else { %>
-                                        <div style="text-align: center; margin-top: 50px;">
-                                            <h2>Welcome to LPU Notes</h2>
-                                            <p>Please <a href="/login">Login</a> or <a href="/register">Register</a> to
-                                                see your saved notes.</p>
+                    </div>
+                    <button class="save-btn" type="submit">Save Note</button>
+                    <button type="button" onclick="toggleForm()"
+                        style="width: 100%; background: transparent; color: var(--text-muted); padding: 10px; border: none; margin-top: 10px; cursor: pointer; font-weight: 700;">Cancel</button>
+                </form>
+            </div>
+
+            <div class="notes-section">
+                <% if (locals.user) { %>
+                    <div class="mb-8">
+                        <div class="flex flex-wrap justify-between items-end gap-4 mb-6">
+                            <div>
+                                <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 5px;">Saved Notes</h2>
+                                <p style="font-size: 14px; font-weight: 700; color: var(--text-muted);">
+                                    Page <span style="color: var(--text);">
+                                        <%= locals.currentPage || 1 %>
+                                    </span>
+                                    of <span style="color: var(--text);">
+                                        <%= locals.totalPages || 1 %>
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <form class="flex items-center gap-2" method="GET" action="/" id="filter-form">
+                                    <div class="relative">
+                                        <input type="text" value="<%= locals.searchQuery || '' %>" id="search-input"
+                                            name="search"
+                                            class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-[var(--accent)] bg-[var(--input-bg)] text-[var(--text)] outline-none w-48 sm:w-64 transition"
+                                            placeholder="Filter by name..." aria-label="Filter by name">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button
+                                        class="px-5 py-2 rounded-full bg-[var(--accent)] text-white font-semibold hover:opacity-90 transition"
+                                        type="submit">Filter</button>
+                                </form>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span
+                                    style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-right: 5px;">Sort
+                                    by:</span>
+                                <a href="/?sort=newest<%= locals.searchQuery ? '&search=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                                    class="sort-pill <%= locals.currentSort === 'newest' ? 'active' : '' %>">Newest</a>
+                                <a href="/?sort=oldest<%= locals.searchQuery ? '&search=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                                    class="sort-pill <%= locals.currentSort === 'oldest' ? 'active' : '' %>">Oldest</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if (locals.notes && locals.notes.length> 0) { %>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+                            <% locals.notes.forEach(note=> { %>
+                                <div class="note-card">
+                                    <h3 class="note-title">
+                                        <%= note.title %>
+                                    </h3>
+                                    <p class="note-content"
+                                        style="height: 75px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;">
+                                        <%= note.content %>
+                                    </p>
+
+                                    <% if (note.image) { %>
+                                        <div
+                                            style="margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: #f9f9f9; height: 160px; border: 1px solid var(--border);">
+                                            <% if (note.image.match(/\.(jpg|jpeg|png|gif|webp)$/i)) { %>
+                                                <img src="<%= note.image %>" alt="Note Media"
+                                                    style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;"
+                                                    onclick="window.open('<%= note.image %>', '_blank')" />
+                                                <% } else { %>
+                                                    <div
+                                                        style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                                                        <a href="<%= note.image %>" target="_blank"
+                                                            style="text-decoration: none; color: var(--text); font-size: 13px; font-weight: 700;">[
+                                                            View Attachment ]</a>
+                                                    </div>
+                                                    <% } %>
                                         </div>
                                         <% } %>
+
+                                            <div
+                                                style="margin-top: auto; display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 18px;">
+                                                <a href="/view-note/<%= note.id %>" class="btn-action flex-1">View</a>
+                                                <a href="/edit-note/<%= note.id %>" class="btn-action flex-1">Edit</a>
+                                                <form action="/delete-note/<%= note.id %>" method="POST"
+                                                    style="flex: 1;">
+                                                    <button class="btn-action w-full" type="submit"
+                                                        onclick="return confirm('Delete?');">Delete</button>
+                                                </form>
+                                            </div>
+                                </div>
+                                <% }) %>
+                        </div>
+
+                        <% if (locals.totalPages> 1) { %>
+                            <div
+                                style="margin-top: 50px; display: flex; justify-content: center; gap: 10px; align-items: center; padding-bottom: 40px;">
+                                <% if (locals.currentPage> 1) { %>
+                                    <a href="/?page=<%= locals.currentPage - 1 %>&sort=<%= locals.currentSort %><%= locals.searchQuery ? '&search=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                                        class="theme-toggle" style="text-decoration: none;">Prev</a>
+                                    <% } %>
+                                        <% for(let i=1; i <=locals.totalPages; i++) { %>
+                                            <a href="/?page=<%= i %>&sort=<%= locals.currentSort %><%= locals.searchQuery ? '&search=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                                                class="nav-item <%= i === locals.currentPage ? 'active' : '' %>"
+                                                style="width: 40px; height: 40px; font-weight: 700;">
+                                                <%= i %>
+                                            </a>
+                                            <% } %>
+                                                <% if (locals.currentPage < locals.totalPages) { %>
+                                                    <a href="/?page=<%= locals.currentPage + 1 %>&sort=<%= locals.currentSort %><%= locals.searchQuery ? '&search=' + encodeURIComponent(locals.searchQuery) : '' %>"
+                                                        class="theme-toggle" style="text-decoration: none;">Next</a>
+                                                    <% } %>
+                            </div>
+                            <% } %>
+                                <% } else { %>
+                                    <div style="text-align: center; margin-top: 50px; color: var(--text-muted);">
+                                        <p>No notes found. Tap the <b>+</b> to add one!</p>
+                                    </div>
+                                    <% } %>
+                                        <% } else { %>
+                                            <div
+                                                style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-top: 80px;">
+                                                <div
+                                                    style="padding: 15px; background: white; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 30px;">
+                                                    <img src="/logo.png"
+                                                        style="height: 100px; width: auto; display: block;">
+                                                </div>
+                                                <h2
+                                                    style="font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px;">
+                                                    Welcome to LPU Notes</h2>
+                                                <p
+                                                    style="color: var(--text-muted); margin-bottom: 35px; font-size: 18px; font-weight: 500;">
+                                                    Your digital workspace for academic success.</p>
+                                                <div class="flex justify-center gap-4">
+                                                    <a href="/login" class="btn-action"
+                                                        style="padding: 14px 45px; font-size: 16px;">Login</a>
+                                                    <a href="/register" class="btn-action btn-register"
+                                                        style="padding: 14px 45px; font-size: 16px;">Register</a>
+                                                </div>
+                                            </div>
+                                            <% } %>
+            </div>
         </div>
-    </div>
 
+        <script>
+            const formSection = document.getElementById('add-note-form');
+            const toggleBtn = document.getElementById('toggle-form-btn');
 
+            function toggleForm() {
+                formSection.classList.toggle('open');
+            }
 
-    <script>
-        // Theme toggle logic
-        const themeToggle = document.getElementById('theme-toggle');
-        function setTheme(theme) {
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            themeToggle.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
-        }
-        // On load, set theme from localStorage
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
-        themeToggle.addEventListener('click', () => {
-            const current = document.body.getAttribute('data-theme') || 'light';
-            setTheme(current === 'light' ? 'dark' : 'light');
-        });
-    </script>
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleForm);
+            }
+
+            const mediaInput = document.getElementById('media-input');
+            const fileNameDisplay = document.getElementById('file-name');
+
+            if (mediaInput) {
+                mediaInput.addEventListener('change', function () {
+                    if (this.files && this.files.length > 0) {
+                        fileNameDisplay.innerText = this.files[0].name;
+                        fileNameDisplay.style.color = 'var(--text)';
+                    } else {
+                        fileNameDisplay.innerText = 'Upload Image/Media';
+                        fileNameDisplay.style.color = 'var(--text-muted)';
+                    }
+                });
+            }
+
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            const updateThemeUI = (theme) => {
+                if (theme === 'dark') {
+                    body.setAttribute('data-theme', 'dark');
+                    themeToggleBtn.innerText = '☀️ Light';
+                } else {
+                    body.removeAttribute('data-theme');
+                    themeToggleBtn.innerText = '🌙 Dark';
+                }
+            };
+
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            updateThemeUI(currentTheme);
+
+            themeToggleBtn.addEventListener('click', () => {
+                const isDark = body.getAttribute('data-theme') === 'dark';
+                const newTheme = isDark ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                updateThemeUI(newTheme);
+            });
+
+            // Live Search Filter (Current Page)
+            const searchInput = document.getElementById('search-input');
+            const noteCards = document.querySelectorAll('.note-card');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    const query = this.value.toLowerCase();
+                    let visibleCount = 0;
+                    noteCards.forEach(card => {
+                        const title = card.querySelector('.note-title').innerText.toLowerCase();
+                        if (title.includes(query)) {
+                            card.style.display = '';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Optional: handle "no notes found" state for live filter
+                    const grid = document.querySelector('.notes-section > div[style*="grid"]');
+                    const noNotesMsg = document.getElementById('no-notes-match');
+
+                    if (visibleCount === 0 && query !== '') {
+                        if (!noNotesMsg && grid) {
+                            const msg = document.createElement('div');
+                            msg.id = 'no-notes-match';
+                            msg.style.textAlign = 'center';
+                            msg.style.marginTop = '20px';
+                            msg.style.color = 'var(--text-muted)';
+                            msg.innerHTML = '<p>No matches found on this page. Try clicking "Filter" to search all notes.</p>';
+                            grid.parentNode.insertBefore(msg, grid.nextSibling);
+                        }
+                    } else if (noNotesMsg) {
+                        noNotesMsg.remove();
+                    }
+                });
+            }
+        </script>
 </body>
 
 </html>

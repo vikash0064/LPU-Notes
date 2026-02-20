@@ -2,105 +2,176 @@
 <html>
 
 <head>
-    <title>Edit Note</title>
+    <title>Edit Note - LPU Notes</title>
     <link rel="icon" type="image/x-icon" href="/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #f4f6f9;
+        :root {
+            --bg: #f4f6f9;
+            --text: #1a1a1a;
+            --text-muted: #666;
+            --card-bg: #ffffff;
+            --border: #eeeeee;
+            --primary: #111111;
+            --primary-invert: #ffffff;
+            --input-bg: #ffffff;
         }
+
+        body[data-theme='dark'] {
+            --bg: #121212;
+            --text: #f4f6f9;
+            --text-muted: #a0a0a0;
+            --card-bg: #1e1e1e;
+            --border: #333333;
+            --primary: #ffffff;
+            --primary-invert: #111111;
+            --input-bg: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 40px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            transition: background 0.3s;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .edit-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
         input,
         textarea {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            box-sizing: border-box;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
             font-size: 15px;
+            background: var(--input-bg);
+            color: var(--text);
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
         }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
         button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: var(--primary-invert);
             border: none;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 12px;
             font-size: 16px;
+            font-weight: 700;
+            transition: opacity 0.2s;
         }
+
         button:hover {
-            background-color: #45a049;
+            opacity: 0.9;
         }
-        @media (max-width: 700px) {
-            body {
-                max-width: 98vw;
-                margin: 0;
-                padding: 10px 2vw;
-            }
-            .note-container, form {
-                padding: 10px 2vw;
-            }
-            input, textarea {
-                font-size: 14px;
-                padding: 8px;
-            }
-            button {
-                font-size: 15px;
-                padding: 8px 12px;
-            }
-            img[alt="LPU Logo"] {
-                height: 36px !important;
-            }
-            h2 {
-                font-size: 20px !important;
-            }
+
+        .cancel-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
         }
-        @media (max-width: 400px) {
+
+        .current-image {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            max-width: 200px;
+        }
+
+        @media (max-width: 480px) {
             body {
-                padding: 2px 1vw;
+                padding: 20px 15px;
             }
-            input, textarea {
-                font-size: 12px;
-                padding: 6px;
-            }
-            button {
-                font-size: 13px;
-                padding: 6px 8px;
+
+            .edit-container {
+                padding: 20px;
             }
         }
     </style>
 </head>
 
 <body>
-
-    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-        <img src="/logo.png" alt="LPU Logo" style="height: 50px;">
-        <h2 style="margin: 0;">Edit Note</h2>
+    <div class="header">
+        <img src="/logo.png" alt="LPU Logo" class="logo">
+        <h2>Edit Note</h2>
     </div>
 
-    <form action="/update-note/<%= note.id %>" method="POST" enctype="multipart/form-data">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="<%= note.title %>" required>
-        <br><br>
-        <label for="content">Content:</label>
-        <textarea id="content" name="content" rows="4" required><%= note.content %></textarea>
-        <br><br>
-        <input type="file" name="media" accept="image/*" style="margin-top:10px;">
-        <% if (note.image && note.image.match(/\.(jpg|jpeg|png|gif)$/i)) { %>
-            <div style="margin-top:10px;">
-                <strong>Current Image:</strong><br>
-                <img src="/uploads/<%= note.image %>" alt="Current Image" style="max-width:150px;max-height:150px;" />
-            </div>
-            <% } %>
-                <button type="submit">Update Note</button>
-    </form>
+    <div class="edit-container">
+        <form action="/update-note/<%= note.id %>" method="POST" enctype="multipart/form-data">
+            <label>Title</label>
+            <input type="text" name="title" value="<%= note.title %>" required>
 
-    <br>
-    <a href="/">Cancel</a>
+            <label>Content</label>
+            <textarea name="content" rows="8" required><%= note.content %></textarea>
 
+            <label>Change Attachment</label>
+            <input type="file" name="media" accept="image/*" style="border: 1px dashed var(--border); padding: 10px;">
+
+            <% if (note.image) { %>
+                <label>Current Image</label>
+                <div class="current-image">
+                    <img src="<%= note.image %>" style="width: 100%; display: block;">
+                </div>
+                <% } %>
+
+                    <button type="submit">Update Note</button>
+        </form>
+        <a href="/" class="cancel-btn">Cancel Changes</a>
+    </div>
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+        }
+    </script>
 </body>
 
 </html>

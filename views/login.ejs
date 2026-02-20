@@ -2,105 +2,163 @@
 <html>
 
 <head>
-    <title>Login</title>
+    <title>Login - LPU Notes</title>
     <link rel="icon" type="image/x-icon" href="/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            --bg: #f4f6f9;
+            --text: #1a1a1a;
+            --card-bg: #ffffff;
+            --border: #eeeeee;
+            --primary: #111111;
+            --primary-invert: #ffffff;
+            --input-bg: #ffffff;
+        }
+
+        body[data-theme='dark'] {
+            --bg: #121212;
+            --text: #f4f6f9;
+            --card-bg: #1e1e1e;
+            --border: #333333;
+            --primary: #ffffff;
+            --primary-invert: #111111;
+            --input-bg: #2d2d2d;
+            --accent: #8b5cf6;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            transition: background 0.3s;
         }
+
         .auth-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
             text-align: center;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
         }
+
         input {
-            width: 90%;
-            padding: 10px;
+            width: 100%;
+            padding: 14px;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            background: var(--input-bg);
+            color: var(--text);
+            box-sizing: border-box;
+            outline: none;
         }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
+            padding: 14px;
+            background: var(--primary);
+            color: var(--primary-invert);
             border: none;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 16px;
+            font-weight: 700;
+            margin-top: 15px;
+            transition: opacity 0.2s;
         }
+
         button:hover {
-            background-color: #45a049;
+            opacity: 0.9;
         }
+
         a {
-            color: #4CAF50;
+            color: var(--accent, var(--primary));
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .logo {
+            height: 60px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 30px;
+            font-size: 14px;
+            color: var(--text);
+            opacity: 0.6;
             text-decoration: none;
         }
-        @media (max-width: 500px) {
+
+        @media (max-width: 480px) {
             .auth-container {
-                width: 98vw;
-                min-width: unset;
-                padding: 10px 2vw;
-            }
-            input {
-                font-size: 14px;
-                padding: 8px;
-            }
-            button {
-                font-size: 15px;
-                padding: 8px;
-            }
-            img[alt="LPU Logo"] {
-                height: 36px !important;
-            }
-        }
-        @media (max-width: 350px) {
-            .auth-container {
-                padding: 4px 1vw;
-            }
-            input {
-                font-size: 12px;
-                padding: 6px;
-            }
-            button {
-                font-size: 13px;
-                padding: 6px;
+                padding: 30px 20px;
+                border: none;
+                box-shadow: none;
+                background: transparent;
             }
         }
     </style>
 </head>
 
 <body>
-
     <div class="auth-container">
-        <img src="/logo.png" alt="LPU Logo" style="height: 60px; margin-bottom: 20px;">
+        <img src="/logo.png" alt="LPU Logo" class="logo">
         <h2>Login</h2>
+        <p style="color: grey;">Welcome back to LPU Notes</p>
+
         <form action="/login" method="POST">
-            <input type="email" name="email" placeholder="Email" required>
+            <input type="email" name="email" placeholder="Email Address" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
+
         <% if (locals.error) { %>
-            <p style="color: red; font-size: 13px; margin-top: 10px;">❌ Invalid email or password!</p>
+            <p style="color: #ef4444; font-size: 13px; margin-top: 15px; font-weight: 600;">Invalid email or password!
+            </p>
             <% } %>
-                <p>Don't have an account? <a href="/register">Register</a></p>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-                <a href="/"
-                    style="display: inline-block; padding: 8px 15px; background: #eee; color: #333; border-radius: 5px; font-size: 14px; text-decoration: none;">←
-                    Back to Home</a>
+
+                <div style="margin-top: 25px; font-size: 14px;">
+                    Don't have an account? <a href="/register">Register</a>
+                </div>
+
+                <a href="/" class="back-home">← Back to Dashboard</a>
     </div>
 
-
+    <script>
+        // Respect global theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+        }
+    </script>
 </body>
 
 </html>
